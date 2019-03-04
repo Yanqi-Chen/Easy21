@@ -1,0 +1,65 @@
+import numpy as np
+
+
+def isBust(p_sum):
+	return p_sum > 21 or p_sum < 1
+
+
+class Easy21(object):
+
+	def __init__(self):
+		self.states = np.arange(-9, 31)
+		self.actions = ['stick', 'hit']
+
+	def reset(self):
+		self.done = False
+		self.player_sum = np.random.randint(1, 11)
+		self.dealer_card = np.random.randint(1, 11)
+		self.dealer_sum = self.dealer_card
+		self.state = np.array([self.player_sum, self.dealer_card])
+		self.player_stick_flag = False
+		self.dealer_stick_flag = False
+		return self.state, 0, False
+
+	def step(self, action):
+		reward = 0
+		if action == 'hit':
+			black_flag = 1 if np.random.random_sample() > (1.0 / 3) else -1
+			self.player_sum += np.random.randint(1, 11) * black_flag
+		elif action == 'stick':
+			self.player_stick_flag = True
+		# dealer AI
+		if not self.dealer_stick_flag:
+			if self.dealer_sum >= 17:
+				self.dealer_stick_flag = True
+			else:
+				black_flag = 1 if np.random.random_sample() > (1.0 / 3) else -1
+				self.dealer_sum += np.random.randint(1, 11) * black_flag
+
+		inner_state = [self.player_sum, self.dealer_sum]
+
+		# result
+		player_bust, dealer_bust = map(isBust, inner_state)
+		self.done = True
+		if player_bust and dealer_bust:
+			reward = 0
+		elif player_bust and not dealer_bust:
+			reward = -1
+		elif not player_bust and dealer_bust:
+			reward = 1
+		else:
+			if self.player_stick_flag and self.dealer_stick_flag:
+				reward = np.sign(self.player_sum - self.dealer_sum)
+			elif self.player_stick_flag and not self.dealer_stick_flag:
+				while self.dealer_sum < 17 and not isBust(self.dealer_sum):
+					black_flag = 1 if np.random.random_sample() > (1.0 / 3) else -1
+					self.dealer_sum += np.random.randint(1, 11) * black_flag
+				if isBust(self.dealer_sum):
+					reward = 1
+				else:
+					reward = np.sign(self.player_sum - self.dealer_sum)
+			else:
+				self.done = False
+
+		self.state = np.array([self.player_sum, self.dealer_card])
+		return self.state, reward, self.done
