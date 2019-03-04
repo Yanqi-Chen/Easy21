@@ -14,7 +14,7 @@ def MC_control():
 	cnt_state = np.zeros((21, 10))
 	N = 100.0
 
-	num_episodes = 100000
+	num_episodes = 1000000
 
 	for i_episode in range(num_episodes):
 		s, _, done = env.reset()
@@ -65,7 +65,7 @@ def MC_control():
 	ax.set_ylabel('Dealer showing')
 	ax.view_init(azim=225)
 	ax.set_xlim(1, 21)
-	ax.set_ylim(1, 10)
+	ax.set_ylim(10, 1)
 	plt.savefig('MC')
 	plt.show()
 
