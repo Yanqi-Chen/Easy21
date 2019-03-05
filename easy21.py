@@ -4,12 +4,15 @@ import numpy as np
 def isBust(p_sum):
 	return p_sum > 21 or p_sum < 1
 
+def drawCard():
+	black_flag = 1 if np.random.random_sample() > (1.0 / 3) else -1
+	return np.random.randint(1, 11) * black_flag
 
 class Easy21(object):
 
 	def __init__(self):
 		self.states = np.arange(-9, 31)
-		self.actions = ['stick', 'hit']
+		self.actions = { 'stick': 0, 'hit': 1 }
 
 	def reset(self):
 		self.done = False
@@ -23,18 +26,16 @@ class Easy21(object):
 
 	def step(self, action):
 		reward = 0
-		if action == 'hit':
-			black_flag = 1 if np.random.random_sample() > (1.0 / 3) else -1
-			self.player_sum += np.random.randint(1, 11) * black_flag
-		elif action == 'stick':
+		if action == 1:
+			self.player_sum += drawCard()
+		elif action == 0:
 			self.player_stick_flag = True
 		# dealer AI
 		if not self.dealer_stick_flag:
 			if self.dealer_sum >= 17:
 				self.dealer_stick_flag = True
 			else:
-				black_flag = 1 if np.random.random_sample() > (1.0 / 3) else -1
-				self.dealer_sum += np.random.randint(1, 11) * black_flag
+				self.dealer_sum += drawCard()
 
 		inner_state = [self.player_sum, self.dealer_sum]
 
@@ -52,8 +53,7 @@ class Easy21(object):
 				reward = np.sign(self.player_sum - self.dealer_sum)
 			elif self.player_stick_flag and not self.dealer_stick_flag:
 				while self.dealer_sum < 17 and not isBust(self.dealer_sum):
-					black_flag = 1 if np.random.random_sample() > (1.0 / 3) else -1
-					self.dealer_sum += np.random.randint(1, 11) * black_flag
+					self.dealer_sum += drawCard()
 				if isBust(self.dealer_sum):
 					reward = 1
 				else:
