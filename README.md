@@ -1,5 +1,5 @@
 # Easy21
-David Silver系列课程的[练习](www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching_files/Easy21-Johannes.pdf)，游戏为简化版本的21点。
+David Silver系列课程的[练习](http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching_files/Easy21-Johannes.pdf)，游戏为简化版本的21点。
 
 三部分为：
 

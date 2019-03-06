@@ -133,7 +133,7 @@ def TD_learning(env):
 		# plt.show()
 
 		print(QvalueM)
-		
+
 		if record:
 			fig2 = plt.figure(dpi=200)
 			plt.plot(list(range(num_episodes)), record_MSEs)
