@@ -5,7 +5,7 @@ def isBust(p_sum):
 	return p_sum > 21 or p_sum < 1
 
 def drawCard():
-	black_flag = 1 if np.random.random_sample() > (1.0 / 3) else -1
+	black_flag = 1 if np.random.random() > (1.0 / 3) else -1
 	return np.random.randint(1, 11) * black_flag
 
 class Easy21(object):

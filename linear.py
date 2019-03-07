@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from easy21 import Easy21
 
+EPSILON = 0.05
+GAMMA = 1
 
 def feature_id(s, a):
 	sf = []
@@ -38,8 +40,7 @@ def Qvalue(s, a, theta):
 
 def choose_action(s, theta):
 	# epsilon greedy exploration
-	e = 0.05
-	if np.random.random_sample() < e:
+	if np.random.random_sample() < EPSILON:
 		if np.random.random_sample() < 0.5:
 			return 1
 		else:
@@ -50,7 +51,6 @@ def choose_action(s, theta):
 
 def TD_learning(env):
 
-	GAMMA = 1
 	LAMBDAS = list(np.arange(0, 1.1, 0.1))
 	#LAMBDA = list(range(0, 1.1, 0.1))
 	#N = 100.0
@@ -117,20 +117,20 @@ def TD_learning(env):
 		MSEs.append(((QvalueM - realQvalue) ** 2).mean())
 
 		# plot
-		# X = np.arange(1, 22)
-		# Y = np.arange(1, 11)
-		# XX, YY = X, Y = np.meshgrid(X, Y)
-		# fig = plt.figure(dpi=200)
-		# ax = fig.gca(projection='3d')
-		# res = np.max(QvalueM, axis=2)
-		# ax.plot_surface(XX, YY, res.T, cmap='hot')
-		# ax.set_zlabel('Value')
-		# ax.set_xlabel('Player sum')
-		# ax.set_ylabel('Dealer showing')
-		# ax.view_init(azim=225)
-		# ax.set_xlim(1, 21)
-		# ax.set_ylim(10, 1)
-		# plt.show()
+		X = np.arange(1, 22)
+		Y = np.arange(1, 11)
+		XX, YY = X, Y = np.meshgrid(X, Y)
+		fig = plt.figure(dpi=200)
+		ax = fig.gca(projection='3d')
+		res = np.max(QvalueM, axis=2)
+		ax.plot_surface(XX, YY, res.T, cmap='hot')
+		ax.set_zlabel('Value')
+		ax.set_xlabel('Player sum')
+		ax.set_ylabel('Dealer showing')
+		ax.view_init(azim=225)
+		ax.set_xlim(1, 21)
+		ax.set_ylim(10, 1)
+		plt.show()
 
 		print(QvalueM)
 

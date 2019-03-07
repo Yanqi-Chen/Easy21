@@ -5,23 +5,20 @@ from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from easy21 import Easy21
 
+N = 100.0
 
 def choose_action(Qvalue, N, s):
 	# epsilon greedy exploration
 	ss = tuple(s - 1)
-	e = N / (N + np.sum(Qvalue[ss]))
-	if np.random.random_sample() < e:
-		if np.random.random_sample() < 0.5:
-			return 1
-		else:
-			return 0
+	EPSILON = N / (N + np.sum(Qvalue[ss]))
+	if np.random.random() < EPSILON:
+		return np.random.randint(0, 2)
 	return np.argmax(Qvalue[ss])
 
 
 def MC_control(env):
 	Qvalue = np.zeros((21, 10, 2))
 	cnt_state = np.zeros((21, 10, 2))
-	N = 100.0
 
 	num_episodes = 1000000
 	mean_G = 0

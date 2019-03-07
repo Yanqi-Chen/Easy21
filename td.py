@@ -5,25 +5,22 @@ from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from easy21 import Easy21
 
+GAMMA = 1
+N = 100.0
 
-def choose_action(Qvalue, N, s):
+def choose_action(Qvalue, s):
 	# epsilon greedy exploration
 	ss = tuple(s - 1)
-	e = N / (N + np.sum(Qvalue[ss]))
-	if np.random.random_sample() < e:
-		if np.random.random_sample() < 0.5:
-			return 1
-		else:
-			return 0
+	EPSILON = N / (N + np.sum(Qvalue[ss]))
+	if np.random.random() < EPSILON:
+		return np.random.randint(0, 2)
 	return np.argmax(Qvalue[ss])
 
 
 def TD_learning(env):
 
-	GAMMA = 1
 	LAMBDAS = list(np.arange(0, 1.1, 0.1))
 	#LAMBDA = list(range(0, 1.1, 0.1))
-	N = 100.0
 	num_episodes = 10000
 	realQvalue = np.load("q.npy")
 	MSEs = []
@@ -38,7 +35,7 @@ def TD_learning(env):
 		record_MSEs = []
 		for i_episode in range(num_episodes):
 			s, _, done = env.reset()
-			a = choose_action(Qvalue, N, s)
+			a = choose_action(Qvalue, s)
 			G = 0
 			E = np.zeros((21, 10, 2))
 			sa_set = set()
@@ -49,7 +46,7 @@ def TD_learning(env):
 				s_, r, done = env.step(a)
 
 				if not done:
-					a_ = choose_action(Qvalue, N, s_)
+					a_ = choose_action(Qvalue, s_)
 					s_a_ = np.append(s_ - 1, a_)
 					TD_error = r + GAMMA * Qvalue[tuple(s_a_)] - Qvalue[tuple(sa)]
 				else:
